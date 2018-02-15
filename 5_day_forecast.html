@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Weather app</title>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="weather.css">
+
+</head>
+<header>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Weather App</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li><a href="index.html">Home</a></li>
+                <li class="active"><a href="#">5 day forecast</a></li>
+                <li><a href="#">16 day forecast</a></li>
+            </ul>
+        </div>
+    </nav>
+</header>
+<body>
+<div class="row" id="5_day_forecast">
+    <div class="col-sm-6 col-md-2" id="day0">
+    </div>
+    <div class="col-sm-6 col-md-2" id="day1">
+    </div>
+    <div class="col-sm-6 col-md-2" id="day2">
+    </div>
+    <div class="col-sm-6 col-md-2" id="day3">
+    </div>
+    <div class="col-sm-6 col-md-2" id="day4">
+    </div>
+    </div>
+</div>
+
+<script type="text/babel">
+
+
+    class Page extends React.Component{
+        constructor(props){
+            super(props);
+            this.state = {data :{
+                            list :[{
+                                dt : 'N/A',
+                                temp :{
+                                    min : 'N/A',
+                                    max : 'N/A'
+                                },
+                                pressure : 'N/A',
+                                humidity : 'N/A',
+                                weather :[{
+                                    main : 'N/A',
+                                    description : 'N/A',
+                                    icon : 'N/A'
+                                }]
+                            },{
+                                dt : 'N/A',
+                                temp :{
+                                    min : 'N/A',
+                                    max : 'N/A'
+                                },
+                                pressure : 'N/A',
+                                humidity : 'N/A',
+                                weather :[{
+                                    main : 'N/A',
+                                    description : 'N/A',
+                                    icon : 'N/A'
+                                }]
+                            },{
+                                dt : 'N/A',
+                                temp :{
+                                    min : 'N/A',
+                                    max : 'N/A'
+                                },
+                                pressure : 'N/A',
+                                humidity : 'N/A',
+                                weather :[{
+                                    main : 'N/A',
+                                    description : 'N/A',
+                                    icon : 'N/A'
+                                }]
+                            },{
+                                dt : 'N/A',
+                                temp :{
+                                    min : 'N/A',
+                                    max : 'N/A'
+                                },
+                                pressure : 'N/A',
+                                humidity : 'N/A',
+                                weather :[{
+                                    main : 'N/A',
+                                    description : 'N/A',
+                                    icon : 'N/A'
+                                }]
+                            },{
+                                dt : 'N/A',
+                                temp :{
+                                    min : 'N/A',
+                                    max : 'N/A'
+                                },
+                                pressure : 'N/A',
+                                humidity : 'N/A',
+                                weather :[{
+                                    main : 'N/A',
+                                    description : 'N/A',
+                                    icon : 'N/A'
+                                }]
+                            }]
+            }}
+
+            this.setData = this.setData.bind(this);
+        }
+
+        setData(weatherData){
+            this.setState({data : weatherData});
+            console.log(weatherData);
+        }
+
+        componentDidMount(){
+
+            var city = localStorage.getItem("city");
+            $.ajax({
+                type: "GET",
+                data: {
+                    apikey: "47a523b26dcf32cd10e37e1ed7508d5a",
+                    q: city,
+                    units: "metric",
+                    cnt: "5"
+                },
+                'url': 'https://api.openweathermap.org/data/2.5/forecast/daily',
+                'success': this.setData
+            })
+        }
+
+        render(){
+            const index = this.props.index;
+            const weather_img = this.state.data.list[index].weather[0].icon;
+            const img_url = "http://openweathermap.org/img/w/" + weather_img + ".png";
+
+
+            function timeConverter(UNIX_timestamp){
+                var a = new Date(UNIX_timestamp * 1000);
+                var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+                var year = a.getFullYear();
+                var month = months[a.getMonth()];
+                var date = a.getDate();
+                var time = date + ' ' + month + ' ' + year;
+                return time;
+            }
+
+            var date = timeConverter(this.state.data.list[index].dt);
+
+            return(
+                    <div className="thumbnail_day">
+                        <p>{date}</p>
+                        <img src={img_url} alt="weather_img" />
+                        <p></p>
+                        <div className="caption">
+                            <p>Min. Temperature: {this.state.data.list[index].temp.min} &#8451;</p>
+                            <p>Max. Temperature: {this.state.data.list[index].temp.max} &#8451;</p>
+                            <p>Pressure: {this.state.data.list[index].pressure} hpa</p>
+                            <p>Humidity: {this.state.data.list[index].humidity} %</p>
+                        </div>
+                    </div>
+            )
+
+        }
+
+
+
+
+    }
+
+
+    for (var i =0; i< 5; i++) {
+        var index = "day" + i;
+        ReactDOM.render(<Page index={i}/>, document.getElementById(index));
+    }
+
+</script>
+
+
+
+
+
+
+</body>
